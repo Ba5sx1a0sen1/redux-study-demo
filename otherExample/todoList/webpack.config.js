@@ -23,7 +23,7 @@ module.exports = {
   },
   plugins:[new HtmlWebpackPlugin({
       title:'Redux',
-      template:'./src/template.html'
+      template:'./src/index.html'
   })],
-  mode:'development'
+  mode:'production'
 };

@@ -22,13 +22,13 @@ const increaseAction = {type:'increase'}
 //定义映射关系
 function mapStateToProps(state){
     return {
-        value:state.count
+        value:state.count //键名对应UI组件的props
     }
 }
 
 function mapDispatchToProps(dispatch){
     return {
-        onClick:()=>dispatch(increaseAction)
+        onIncreaseClick:()=>dispatch(increaseAction)
     }
 }
 //使用Connect创建容器组件
