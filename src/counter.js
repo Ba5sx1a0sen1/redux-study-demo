@@ -1,38 +1,59 @@
 import React from "react"
-import ReactDom from "react-dom"
+import ReactDOM from "react-dom"
 import { createStore } from "redux"
+import {Provider,connect} from "react-redux"
 
-const Counter = ({ value, onIncrement, onDecrement }) => (//定义组件
-    <div>
-        <h1>我是渲染出来的值:{value}</h1>
-        <button onClick={onIncrement}>+</button>
-        <button onClick={onDecrement}>-</button>
-    </div>
-)
-
-const reducer = (state = 0, action) => {
-    switch (action.type) {
-        case 'INCREMENT': return state + 1;
-        case 'DECREMENT': return state - 1;
-        default: return state
+//UI组件
+class Counter extends React.Component{
+    render(){
+        const {value,onIncreaseClick} = this.props
+        return(
+            <div>
+                <span>{value}</span>
+                <button onClick={onIncreaseClick}>增加1</button>
+            </div>
+        )
     }
 }
 
-const store = createStore(reducer)
 
-const render = () => {
-    ReactDom.render(
-        <Counter
-            value={store.getState()}
-            onIncrement={()=>store.dispatch({ type: 'INCREMENT' })}
-            onDecrement={()=>store.dispatch({ type: 'DECREMENT' })}
-        />,
-        document.getElementById('root')
-    )
-}''
+//定义Action
+const increaseAction = {type:'increase'}
+//定义映射关系
+function mapStateToProps(state){
+    return {
+        value:state.count
+    }
+}
 
-render()
-store.subscribe(render)
-store.subscribe(()=>{
-    console.log(store.getState())
-})
+function mapDispatchToProps(dispatch){
+    return {
+        onClick:()=>dispatch(increaseAction)
+    }
+}
+//使用Connect创建容器组件
+const App = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Counter)
+
+//定义Reducer
+function counterReducer(state = {count:0},action){
+    const count = state.count
+    switch(action.type){
+        case 'increase':
+            return {count:count+1}
+        default:
+            return state
+    }
+}
+
+//创建Store
+const store = createStore(counterReducer)
+
+ReactDOM.render(
+    <Provider store={store}>
+      <App />
+    </Provider>,
+    document.getElementById('root')
+  )
